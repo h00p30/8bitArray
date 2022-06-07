@@ -1,0 +1,56 @@
+
+/* Imports */
+#include "./src/8bitArray.huff"
+
+/* Interface */
+#define function testBitmask(uint8) view returns (bytes32)
+#define function testNumberOffset(uint8,uint8) view returns (bytes32)
+#define function testNumberWrite(uint8,uint8) nonpayable returns (bytes32)
+#define function testNumberRead(uint8) view returns (bytes32)
+
+/* Methods */
+#define macro TEST_BITMASK() = takes (0) returns (0) {
+    0x04 calldataload   // [index]
+    GET_BITMASK()       // [bitmask]
+    0x00 mstore
+    0x20 0x00 return
+}
+
+#define macro TEST_NUMBER_OFFSET() = takes (0) returns (0) {
+    0x04 calldataload   // [number]
+    0x24 calldataload   // [index, number]
+    OFFSET_NUMBER()     // [offsetted number]
+    0x00 mstore
+    0x20 0x00 return
+}
+
+#define macro TEST_NUMBER_WRITE() = takes (0) returns (0) {
+    0x24 calldataload   // [index]
+    0x04 calldataload   // [number, index]
+    SET_NUMBER()
+}
+
+#define macro TEST_NUMBER_READ() = takes (0) returns (0) {
+    0x04 calldataload   // [index]
+    GET_NUMBER()        // [number]
+    0x00 mstore
+    0x20 0x00 return
+}
+
+#define macro MAIN() = takes (0) returns (0) {
+    // Identify which function is being called.
+    0x00 calldataload 0xE0 shr
+    dup1 0xd5073304 eq testbitmask jumpi
+    dup1 0xa0255793 eq testnumberoffset jumpi
+    dup1 0x810bcd90 eq testnumberwrite jumpi
+    dup1 0x41279ea3 eq testnumberread jumpi
+
+    testbitmask:
+        TEST_BITMASK()
+    testnumberoffset:
+        TEST_NUMBER_OFFSET()
+    testnumberwrite:
+        TEST_NUMBER_WRITE()
+    testnumberread:
+        TEST_NUMBER_READ()
+}
