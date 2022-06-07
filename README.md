@@ -14,6 +14,9 @@ Make sure you have the following programs installed:
 
 To run tests:
 ```shell
+    forge install
+```
+```shell
     forge test
 ```
 NB: foundry template is from this [article](https://medium.com/@jtriley15/huff-vs-yul-for-evm-smart-contracts-620d1d618197).
